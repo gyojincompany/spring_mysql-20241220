@@ -8,11 +8,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.jbedu.mysql.command.BCommand;
+import com.jbedu.mysql.command.BListCommand;
+import com.jbedu.mysql.command.BWriteCommand;
 import com.jbedu.mysql.dao.BoardDao;
 import com.jbedu.mysql.dto.BoardDto;
 
 @Controller
 public class BoardController {
+	
+	BCommand command = null;
 	
 	@RequestMapping(value = "/write_form")
 	public String write_form() {
@@ -27,12 +32,16 @@ public class BoardController {
 	@RequestMapping(value = "/writeOk")
 	public String writeOk(HttpServletRequest request, Model model) {
 		
-		String bname = request.getParameter("bname");
-		String btitle = request.getParameter("btitle");
-		String bcontent = request.getParameter("bcontent");
+//		String bname = request.getParameter("bname");
+//		String btitle = request.getParameter("btitle");
+//		String bcontent = request.getParameter("bcontent");
+//		
+//		BoardDao boardDao = new BoardDao();
+//		boardDao.boardWrite(bname, btitle, bcontent);
+		model.addAttribute("request", request);
 		
-		BoardDao boardDao = new BoardDao();
-		boardDao.boardWrite(bname, btitle, bcontent);
+		command = new BWriteCommand();
+		command.execute(model); 
 		
 		return "redirect:boardList";
 	}
@@ -40,10 +49,13 @@ public class BoardController {
 	@RequestMapping(value = "/boardList")
 	public String boardList(HttpServletRequest request, Model model) {
 		
-		BoardDao boardDao = new BoardDao();
-		ArrayList<BoardDto> bDtos = boardDao.boardList();//모든 글 목록
+//		BoardDao boardDao = new BoardDao();
+//		ArrayList<BoardDto> bDtos = boardDao.boardList();//모든 글 목록
+//		
+//		model.addAttribute("bDtos", bDtos);
 		
-		model.addAttribute("bDtos", bDtos);
+		command = new BListCommand();
+		command.execute(model);
 		
 		return "boardList";
 	}
@@ -61,9 +73,10 @@ public class BoardController {
 			model.addAttribute("url", "boardList");
 			
 			return "alert";
-		} else {
-			return "redirect:boardList";
-		}
+		} 
+		
+		return "redirect:boardList";
+		
 		
 		
 	}
