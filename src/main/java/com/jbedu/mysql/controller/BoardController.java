@@ -19,6 +19,11 @@ public class BoardController {
 		return "write_form";
 	}
 	
+	@RequestMapping(value = "/delete_form")
+	public String delete_form() {
+		return "delete_form";
+	}
+	
 	@RequestMapping(value = "/writeOk")
 	public String writeOk(HttpServletRequest request, Model model) {
 		
@@ -43,9 +48,30 @@ public class BoardController {
 		return "boardList";
 	}
 	
+	@RequestMapping(value = "/deleteOk")
+	public String deleteOk(HttpServletRequest request, Model model) {
+		
+		BoardDao boardDao = new BoardDao();
+		int deleteFlag = boardDao.boardDelete(request.getParameter("bnum"));
+		//글 삭제 성공 deleteFlag = 1, 실패 0
+		
+		if(deleteFlag != 1) {//존재하지 않는 글번호 삭제 시도->삭제 실패
+			
+			model.addAttribute("msg", "이미 삭제된 글번호 입니다.");
+			model.addAttribute("url", "boardList");
+			
+			return "alert";
+		} else {
+			return "redirect:boardList";
+		}
+		
+		
+	}
 	
-	
-	
+	@RequestMapping(value = "/alert")
+	public String alert() {
+		return "alert";
+	}
 	
 	
 }
