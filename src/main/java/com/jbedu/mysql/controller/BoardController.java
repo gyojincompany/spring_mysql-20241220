@@ -1,5 +1,7 @@
 package com.jbedu.mysql.controller;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -7,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.jbedu.mysql.dao.BoardDao;
+import com.jbedu.mysql.dto.BoardDto;
 
 @Controller
 public class BoardController {
@@ -28,5 +31,21 @@ public class BoardController {
 		
 		return "redirect:boardList";
 	}
+	
+	@RequestMapping(value = "/boardList")
+	public String boardList(HttpServletRequest request, Model model) {
+		
+		BoardDao boardDao = new BoardDao();
+		ArrayList<BoardDto> bDtos = boardDao.boardList();//모든 글 목록
+		
+		model.addAttribute("bDtos", bDtos);
+		
+		return "boardList";
+	}
+	
+	
+	
+	
+	
 	
 }
